@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .gallery img {
+            margin: 10px;
+            width: 150px;
+            height: 150px;
+        }
+        .gallery div {
+            position: relative;
+        }
+        .gallery button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #admin-controls {
+            display: none;
+        }
+    </style>
+    <script>
+        function addImages() {
+            const input = document.getElementById('imageInput');
+            const gallery = document.getElementById('gallery');
+
+            if (input.files) {
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const div = document.createElement('div');
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        const btn = document.createElement('button');
+                        btn.innerText = 'X';
+                        btn.onclick = function () {
+                            gallery.removeChild(div);
+                        };
+                        div.appendChild(img);
+                        div.appendChild(btn);
+                        gallery.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        function showAdminControls() {
+            const password = prompt('Enter admin password:');
+            if (password === 'your_admin_password') {
+                document.getElementById('admin-controls').style.display = 'block';
+            } else {
+                alert('Incorrect password');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Image Gallery</h1>
+    <div id="admin-controls">
+        <input type="file" id="imageInput" multiple>
+        <button onclick="addImages()">Add Images</button>
+    </div>
+    <button onclick="showAdminControls()">Admin Login</button>
+    <div class="gallery" id="gallery"></div>
+</body>
+</html>
